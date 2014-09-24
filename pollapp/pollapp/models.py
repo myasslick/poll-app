@@ -1,4 +1,5 @@
 import datetime
+import uuid
 
 from sqlalchemy import (
     Column,
@@ -26,6 +27,7 @@ class Base(object):
         return cls.__name__.lower()
 
     id =  Column(Integer, primary_key=True)
+    _id = Column(Text, unique=True)
 
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 Base = declarative_base(cls=Base)
@@ -36,6 +38,7 @@ class Poll(Base):
 
     def __init__(self, **kwargs):
         self.created_on = datetime.datetime.utcnow()
+        self._id = str(uuid.uuid1())
         super(Poll, self).__init__(**kwargs)
 
 class Choice(Base):
@@ -43,6 +46,10 @@ class Choice(Base):
     poll_id = Column(Integer, ForeignKey('poll.id'))
     poll = relationship("Poll", backref=backref("choices",
         lazy="dynamic"))
+
+    def __init__(self, **kwargs):
+        self._id = str(uuid.uuid1())
+        super(Choice, self).__init__(**kwargs)
 
 class Response(Base):
     ip_address = Column(Text)
@@ -53,6 +60,7 @@ class Response(Base):
 
     def __init__(self, **kwargs):
         self.voted_on = datetime.datetime.utcnow()
+        self._id = str(uuid.uuid1())
         super(Response, self).__init__(**kwargs)
 
 #Index('my_index', MyModel.name, unique=True, mysql_length=255)
