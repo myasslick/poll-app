@@ -25,8 +25,6 @@ class Base(object):
     def __tablename__(cls):
         return cls.__name__.lower()
 
-    __table_args__ = {'mysql_engine': 'InnoDB'}
-
     id =  Column(Integer, primary_key=True)
 
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
