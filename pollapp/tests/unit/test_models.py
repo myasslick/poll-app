@@ -10,7 +10,7 @@ from pollapp import models
 class TestModelsUnittests(BaseTestCase):
     def test_create_poll(self):
         poll = self.create_poll()
-        self.assertEqual(poll.question, self.question)
+        self.assertEqual(poll.name, self.name)
 
     def test_create_choice(self):
         choice = self.create_choice(self.options[0])

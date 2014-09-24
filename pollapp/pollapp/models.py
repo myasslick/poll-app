@@ -31,7 +31,7 @@ DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 Base = declarative_base(cls=Base)
 
 class Poll(Base):
-    question = Column(Text)
+    name = Column(Text)
     created_on = Column(TIMESTAMP(timezone=False))
 
     def __init__(self, **kwargs):

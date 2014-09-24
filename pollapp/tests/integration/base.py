@@ -35,7 +35,7 @@ class BaseTestCase(unittest.TestCase):
         models.Base.metadata.tables["response"].create(bind=cls.engine)
         transaction.commit()
 
-        cls.question = "Yay or Nay?"
+        cls.name = "Yay or Nay?"
         cls.options = [
             "Yay",
             "Nay"
@@ -67,9 +67,9 @@ class BaseTestCase(unittest.TestCase):
             self.session.refresh(inst)
         yield
 
-    def create_poll(self, question=None):
-        return models.Poll(question=question
-            or self.question)
+    def create_poll(self, name=None):
+        return models.Poll(name=name
+            or self.name)
 
     def create_choice(self, text):
         return models.Choice(text=text)

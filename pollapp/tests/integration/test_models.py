@@ -4,7 +4,7 @@ class TestModelIntegration(BaseTestCase):
     def test_create_poll(self):
         poll = self.create_poll()
         with self.on_session([poll]):
-            self.assertEqual(poll.question, self.question)
+            self.assertEqual(poll.name, self.name)
 
     def test_create_choice(self):
         poll = self.create_poll()

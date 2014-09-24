@@ -74,7 +74,7 @@ class BaseTestCase(unittest.TestCase):
         models.Base.metadata.create_all(cls.engine, checkfirst=True)
         transaction.commit()
 
-        cls.question = "Yay or Nay?"
+        cls.name = "Yay or Nay?"
         cls.options = [
             "Yay",
             "Nay"

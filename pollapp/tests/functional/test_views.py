@@ -3,14 +3,14 @@ from base import BaseTestCase
 class TestViews(BaseTestCase):
 
     def test_create_poll_successful(self):
-        r = self.create_poll(self.question,
+        r = self.create_poll(self.name,
             self.options_str)
         self.assertEqual(r.status_code, 200)
         self.assertEqual("id" in r.json(), True)
         self.assertEqual(r.json()["id"] is not None, True)
 
     def test_vote_chocie1(self):
-        r1 = self.create_poll(self.question,
+        r1 = self.create_poll(self.name,
             self.options_str)
         self.assertEqual(r1.status_code, 200)
         poll_id = r1.json()["id"]

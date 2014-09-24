@@ -16,9 +16,9 @@ LOG = logging.getLogger(__name__)
 
 @view_config(route_name="polls", renderer="json", request_method="POST")
 def create_poll(request):
-    question = request.json_body["name"]
+    name = request.json_body["name"]
     options = request.json_body["options"].split(",")
-    poll = Poll(question=question)
+    poll = Poll(name=name)
     choices = [Choice(text=option) for option in options]
     for choice in choices:
         poll.choices.append(choice)

@@ -20,16 +20,16 @@ TEST_INI = os.path.join(CONFIG_DIR, "testing.ini")
 class BaseTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.question = "Yay or Nay?"
+        cls.name = "Yay or Nay?"
         cls.options = [
             "Yay",
             "Nay"
         ]
         cls.ip_address = "192.168.1.1"
 
-    def create_poll(self, question=None):
-        return models.Poll(question=question
-            or self.question)
+    def create_poll(self, name=None):
+        return models.Poll(name=name
+            or self.name)
 
     def create_choice(self, text):
         return models.Choice(text=text)
