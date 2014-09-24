@@ -8,7 +8,6 @@ import requests
 import subprocess
 import time
 import transaction
-import urlparse
 from pyramid import testing
 from sqlalchemy import engine_from_config
 from paste.deploy.loadwsgi import appconfig
@@ -58,12 +57,10 @@ def start_server():
     return p
 
 def make_vote_url(poll_id):
-    p1 = urlparse.urljoin(POLL_URL, str(poll_id))
-    return urlparse.urljoin(p1, "vote")
+    return "/".join([POLL_URL, poll_id, "vote"])
 
 def make_result_url(poll_id):
-    p1 = urlparse.urljoin(POLL_URL, str(poll_id))
-    return urlparse.urljoin(p1, "results")
+    return "/".join([POLL_URL, poll_id, "results"])
 
 class BaseTestCase(unittest.TestCase):
     @classmethod

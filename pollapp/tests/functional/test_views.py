@@ -18,4 +18,4 @@ class TestViews(BaseTestCase):
         r2 = self.create_vote(poll_id, choice_index,
             self.ip_address)
         self.assertEqual(r2.status_code, 200)
-        self.assertEqual(r2.json()["status"], "Ok")
+        self.assertEqual(r2.json()["status"], u"Ok")
