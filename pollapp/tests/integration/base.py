@@ -13,7 +13,10 @@ from sqlalchemy.orm import scoped_session
 from pollapp import models
 
 TEST_DIR = os.path.abspath(
-        os.path.dirname(__file__))
+        os.path.dirname(
+            os.path.dirname(__file__)
+           )
+        )
 
 CONFIG_DIR = os.path.join(TEST_DIR, "configurations")
 
@@ -44,14 +47,14 @@ class BaseTestCase(unittest.TestCase):
         models.Base.metadata.drop_all(cls.engine)
 
     def setUp(self):
-        self.session = (
-            scoped_session(sessionmaker(
-                extension=ZopeTransactionExtension()
-                )
-            )
-        )
-
-        self.session.configure(bind=self.engine)
+        #self.session = (
+        #    scoped_session(sessionmaker(
+        #        extension=ZopeTransactionExtension()
+        #        )
+        #    )
+        #)
+        self.Session = sessionmaker(bind=self.engine)
+        self.session = self.Session()
 
     def tearDown(self):
         self.session.rollback()
