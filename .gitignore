@@ -2,8 +2,8 @@
 *.db
 
 # Ignore swap files
-.swp
-.swap
+*.swp
+*.swap
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
