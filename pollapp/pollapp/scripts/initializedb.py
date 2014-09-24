@@ -11,12 +11,13 @@ from pyramid.paster import (
 
 from pyramid.scripts.common import parse_vars
 
+"""
 from ..models import (
     DBSession,
     MyModel,
     Base,
     )
-
+"""
 
 def usage(argv):
     cmd = os.path.basename(argv[0])
@@ -24,7 +25,10 @@ def usage(argv):
           '(example: "%s development.ini")' % (cmd, cmd))
     sys.exit(1)
 
+def main(argv=sys.argv):
+    pass
 
+"""
 def main(argv=sys.argv):
     if len(argv) < 2:
         usage(argv)
@@ -38,3 +42,4 @@ def main(argv=sys.argv):
     with transaction.manager:
         model = MyModel(name='one', value=1)
         DBSession.add(model)
+"""
