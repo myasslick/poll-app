@@ -1,3 +1,10 @@
+# Ignore db file
+*.db
+
+# Ignore swap files
+.swp
+.swap
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
