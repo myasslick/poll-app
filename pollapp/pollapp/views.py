@@ -25,3 +25,15 @@ def create_poll(request):
     DBSession.add(poll)
     DBSession.add_all(choices)
     return {"id": poll.id}
+
+@view_config(route_name="vote", renderer="json", request_method="POST")
+def vote(request):
+    poll_id = int(request.matchdic["id"])
+    poll = DBSessoon.query(Poll).filter_by(id=poll_id).first()
+    if poll:
+        index = int(request.json_body["option"])
+        ip_address = request.json_body["ip_address"]
+        resp = Response(ip_address=ip_address)
+        resp.choice = poll.choices[index]
+        DBSession.add(resp)
+        return {"status": "OK"}

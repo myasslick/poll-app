@@ -8,6 +8,7 @@ import requests
 import subprocess
 import time
 import transaction
+import urlparse
 from pyramid import testing
 from sqlalchemy import engine_from_config
 from paste.deploy.loadwsgi import appconfig
@@ -56,12 +57,12 @@ def start_server():
     time.sleep(3)
     return p
 
-def make_vote_url(vote_id):
-    p1 = urlparse.urljoin(VOTE_URL, str(vote_id))
+def make_vote_url(poll_id):
+    p1 = urlparse.urljoin(POLL_URL, str(poll_id))
     return urlparse.urljoin(p1, "vote")
 
-def make_result_url(vote_id):
-    p1 = urlparse.urljoin(VOTE_URL, str(vote_id))
+def make_result_url(poll_id):
+    p1 = urlparse.urljoin(POLL_URL, str(poll_id))
     return urlparse.urljoin(p1, "results")
 
 class BaseTestCase(unittest.TestCase):
@@ -110,18 +111,18 @@ class BaseTestCase(unittest.TestCase):
             headers=headers)
         return r
 
-    def create_vote(self, vote_id, option_inex, ip_address):
+    def create_vote(self, poll_id, option_index, ip_address):
         data = {
             "option": option_index,
             "ip": ip_address
         }
         headers = {"content-type": "application/json"}
-        vote_url = make_vote_url(vote_id)
+        vote_url = make_vote_url(poll_id)
         r = requests.post(vote_url, data=json.dumps(data),
             headers=headers)
         return r
 
-    def get_result(self, vote_id):
-        result_url = make_result_url(vote_id)
+    def get_result(self, poll_id):
+        result_url = make_result_url(poll_id)
         r = requests.get(result_url)
         return r
