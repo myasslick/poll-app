@@ -30,6 +30,7 @@ class BaseTestCase(unittest.TestCase):
     def setUpClass(cls):
         settings = appconfig('config:' + TEST_INI)
         cls.engine = engine_from_config(settings, prefix='sqlalchemy.')
+        models.Base.metadata.drop_all(cls.engine)
         models.Base.metadata.tables["poll"].create(bind=cls.engine)
         models.Base.metadata.tables["choice"].create(bind=cls.engine)
         models.Base.metadata.tables["response"].create(bind=cls.engine)
