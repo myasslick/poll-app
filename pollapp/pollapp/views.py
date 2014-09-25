@@ -1,6 +1,6 @@
 import json
 from pyramid.response import Response
-from pyramid.view import view_config
+from pyramid.view import view_config, view_defaults
 
 from sqlalchemy.exc import DBAPIError
 from sqlalchemy.sql import text
@@ -12,8 +12,26 @@ from .models import (
     Response
     )
 
+from . import validation
+from .base import DefaultView
+from .validation import validator
+
 import logging
 LOG = logging.getLogger(__name__)
+
+GET = "GET"
+POST = "POST"
+
+@view_config(context=Exception, renderer='json')
+def http_500_uncaught_internal_error(exc, request):
+    LOG.error("Unhandled 500 error and stacktrace: ======")
+    LOG.exception(exc)
+    request.response.status_code = 500
+    body = {
+        "message": "500 Internal Server Error",
+        "status": "error"
+    }
+    return body
 
 def get_counts(poll_id):
     params = {"poll_id": poll_id}
@@ -36,17 +54,28 @@ GROUP BY choice.id;
     else:
         return []
 
-@view_config(route_name="polls", renderer="json", request_method="POST")
-def create_poll(request):
-    name = request.json_body["name"]
-    options = request.json_body["options"].split(",")
+def create_poll(session, name, options):
     poll = Poll(name=name)
     choices = [Choice(text=option) for option in options]
     for choice in choices:
         poll.choices.append(choice)
-    DBSession.add(poll)
-    DBSession.add_all(choices)
-    return {"id": poll._id}
+    session.add(poll)
+    session.add_all(choices)
+    return poll
+
+class PollViews(DefaultView):
+    def __init__(self, request):
+        self.request = request
+
+    @view_config(route_name="polls", renderer="json", request_method=POST)
+    @validator(validation.check_create_poll)
+    def create_poll(self):
+        name = self.request.cleaned_data["name"]
+        options = self.request.cleaned_data["options"]
+        poll = create_poll(DBSession, name, options)
+        return self.success(201, override=True,
+            data={"id": poll._id}
+        )
 
 @view_config(route_name="vote", renderer="json", request_method="POST")
 def vote(request):

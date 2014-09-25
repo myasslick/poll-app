@@ -33,7 +33,7 @@ class DefaultView(object):
 
     def success(self, status_code, data=None, message=None,
         override=False):
-       """Returns a 2xx range response.
+        """Returns a 2xx range response.
 
         Args:
             status_code: the response status code (2xx)
