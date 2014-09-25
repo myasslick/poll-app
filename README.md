@@ -105,6 +105,9 @@ By default, without any specific configuration, 100 votes will
 be casted across three options [dup/unique] (option 0 gets 88/10),
 option 1 gets 0/2 and option 3 gets 0/0)
 
+I've tested my raw SQL up to 46,000 duplicates (roughly 6 minutes
+of insertions....).
+
 ### Specifications:
 
 POST /polls : Create a new poll. Returns a JSON object with one key `id`, the ID of the new poll. POST arguments are:
@@ -144,3 +147,9 @@ Poll list and choice list views are not necessary, but may help with testing.
     * choice_id
     * choice (reference obejct, lazy)
 
+### Play on SQLFiddle
+
+I spent a great deal of time on SQLFiddle to work on
+the SQL statement (yep, I suck at writing SQL queries!).
+
+[SQLFiddle](http://sqlfiddle.com/#!15/ec5c9/41/0)
