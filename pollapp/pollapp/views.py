@@ -155,3 +155,5 @@ def get_result(request):
     poll = DBSession.query(Poll).filter_by(_id=poll_id).first()
     if poll:
         return get_counts(poll.id)
+    else:
+        raise HTTPNotFoundError()

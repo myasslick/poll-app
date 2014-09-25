@@ -1,7 +1,6 @@
 from base import BaseTestCase
 
 class TestViews(BaseTestCase):
-
     def assert_result_response_keys(self, resp):
         for r in resp.json():
             keys = r.keys()
@@ -110,3 +109,7 @@ class TestViews(BaseTestCase):
         self.assertEqual(r4.json()[1]["name"], self.options[1])
         self.assertEqual(r4.json()[1]["unique_votes"], 1)
         self.assertEqual(r4.json()[1]["votes"], 2)
+
+    def test_result_404(self):
+        r = self.get_result("123456")
+        self.assertEqual(r.status_code, 404)
