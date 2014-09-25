@@ -110,13 +110,20 @@ of insertions....).
 
 ### Specifications:
 
-POST /polls : Create a new poll. Returns a JSON object with one key `id`, the ID of the new poll. POST arguments are:
+``POST /polls``: Create a new poll.
+Returns a JSON object with one key `id`, the ID of the new poll.
+POST arguments are:
+
 * name: name of poll to create
 * options: comma separated list of poll options
-  POST /polls/<id>/vote : Vote on a poll. POST arguments are:
+
+``POST /polls/<id>/vote``: Vote on a poll. POST arguments are:
 * option: Zero-based index of option to vote on
-* ip: IP address of voter. Use this argument instead of actual remote IP to make testing easier
-GET /polls/<id>/results: Get poll results. Returns a JSON list of objects, each with the keys:
+* ip: IP address of voter. Use this argument instead of actual
+remote IP to make testing easier
+
+``GET /polls/<id>/results:`` Get poll results. Returns a JSON list
+of objects, each with the keys:
 * name: Name of the option
 * votes: Raw number of votes on the option
 * unique_votes: Unique number of IP addresses that voted on the option
