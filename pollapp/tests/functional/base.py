@@ -74,7 +74,8 @@ class BaseTestCase(unittest.TestCase):
         cls.name = "Yay or Nay?"
         cls.options = [
             "Yay",
-            "Nay"
+            "Nay",
+            "Maybe"
         ]
         cls.options_str = ",".join(cls.options)
 
@@ -82,7 +83,7 @@ class BaseTestCase(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        models.Base.metadata.drop_all(cls.engine)
+        #models.Base.metadata.drop_all(cls.engine)
         cls.session.close_all()
         cls.engine.dispose()
         cls.server.terminate()
