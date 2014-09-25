@@ -70,6 +70,41 @@ r3 = requests.get(url3)
 
 ```
 
+### Spambot stress test
+
+You can use ``pollapp/scripts/spam.py`` to spam votes.
+
+```
+python spam.py --name="Yay or Nay or Maybe?" \
+--options="Yay,Nay,Maybe" --config="0:5,1;1:0,2"
+
+```
+
+This command will:
+
+* creates a new poll with the given options
+* option 0 will get 5 duplicate votes, and 1 additional unique vote
+(total of 6 votes and 2 unique votes)
+* option 1 will get 0 duplicate votes and 2 additional unique vote
+(total of 2 vote and 2 unique vote)
+* option 3 will get 0 vote
+
+The ``;`` separates the configuration among options.
+
+The result from the server is also displayed:
+
+```
+Done!Let's test.
+[ { u'name': u'Yay', u'unique_votes': 2, u'votes': 6},
+  { u'name': u'Nay', u'unique_votes': 2, u'votes': 2},
+  { u'name': u'Maybe', u'unique_votes': 0, u'votes': 0}]
+```
+
+You can play with the command line ``./pollapp/scripts/spam.py --help``.
+By default, without any specific configuration, 100 votes will
+be casted across three options [dup/unique] (option 0 gets 88/10),
+option 1 gets 0/2 and option 3 gets 0/0)
+
 ### Specifications:
 
 POST /polls : Create a new poll. Returns a JSON object with one key `id`, the ID of the new poll. POST arguments are:
