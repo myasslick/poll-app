@@ -32,6 +32,32 @@ class TestViews(BaseTestCase):
         self.assertEqual(r2.status_code, 201)
         self.assertEqual(r2.json()["status"], u"Ok")
 
+    def test_vote_not_found(self):
+        r = self.create_vote("123", 0, self.ip_address)
+        self.assertEqual(r.status_code, 404)
+
+    def test_vote_index_none_integer_returns_400(self):
+        r1 = self.create_poll(self.name, self.options_str)
+        self.assertEqual(r1.status_code, 201)
+        poll_id = r1.json()["id"]
+        choice_index = "abc!"
+        r2 = self.create_vote(poll_id, choice_index,
+            self.ip_address)
+        self.assertEqual(r2.status_code, 400)
+        self.assertEqual(r2.json()["status"], "fail")
+        self.assertEqual(r2.json()["error"]["field"], "option")
+
+    def test_vote_index_out_of_range_error(self):
+        r1 = self.create_poll(self.name, self.options_str)
+        self.assertEqual(r1.status_code, 201)
+        poll_id = r1.json()["id"]
+        choice_index = 1000000
+        r2 = self.create_vote(poll_id, choice_index,
+            self.ip_address)
+        self.assertEqual(r2.status_code, 409)
+        self.assertEqual(r2.json()["status"], "fail")
+        self.assertTrue("out of range" in r2.json()["message"])
+
     def test_get_result_with_zeros(self):
         r1 = self.create_poll(self.name,
             self.options_str)
