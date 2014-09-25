@@ -73,19 +73,16 @@ def spam(name, options, total=100, host=None, config=None):
                   1: {"dup": 0, "unique": 2},
                   2: {"dup": 0, "unique": 0}}
 
-    print groups
     for option, group in groups.items():
         if group["dup"] > 0:
             ip_address = random_ip()
-            for i in range(0, group["dup"]):
-                print ip_address
+            for i in xrange(0, group["dup"]):
                 print("Spamming {} with duplicate #{}".format(option, i))
                 create_vote(poll_id, option, ip_address, host=host)
                 
         if group["unique"] > 0:
-            for i in range(0, group["unique"]):
+            for i in xrange(0, group["unique"]):
                 ip_address = random_ip()
-                print ip_address
                 print("Spamming {} with unique visitor #{}".format(option, i))
                 create_vote(poll_id, option, ip_address, host=host)
 
