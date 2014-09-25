@@ -17,7 +17,15 @@ requires = [
     'transaction',
     'zope.sqlalchemy',
     'waitress',
+    'gunicorn',
+    'psycopg2'
     ]
+
+test_requires = [
+    'requests',
+    'nose',
+    'mock'
+]
 
 setup(name='pollapp',
       version='0.0',
@@ -38,6 +46,7 @@ setup(name='pollapp',
       zip_safe=False,
       test_suite='pollapp',
       install_requires=requires,
+      test_require=test_requires,
       entry_points="""\
       [paste.app_factory]
       main = pollapp:main
