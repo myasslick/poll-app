@@ -1,3 +1,5 @@
+NotFoundMsg = "Resource not found"
+
 class ValidationError(Exception):
     def __init__(self, type, field, msg, value=None):
         super(ValidationError, self).__init__(msg)
@@ -20,3 +22,8 @@ class InvalidFieldValueError(ValidationError):
     def __init__(self, field, msg, value=None):
         super(InvalidFieldValueError, self).__init__(
             "invalid", field, msg, value=value)
+
+class HTTPNotFoundError(Exception):
+    """ Resource is not found. """
+    def __init__(self, msg=NotFoundMsg):
+        self.msg = msg

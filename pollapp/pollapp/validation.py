@@ -63,3 +63,14 @@ def check_create_poll(data):
         raise InvalidFieldValueError("options",
             "Must be a non-empty string. Multiple options must be\
 separated by comma.", value=data["options"])
+
+def check_vote(data):
+    expected_fields = ("option", "ip")
+    has_required_fields(expected_fields, data.keys())
+
+    try:
+        index = int(data["option"])
+    except ValueError:
+        raise InvalidFieldValueError("option",
+            "Option must be an integer", value=data["option"])
+    return {"option": index, "ip": data["ip"]}

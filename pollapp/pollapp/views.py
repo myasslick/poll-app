@@ -14,6 +14,7 @@ from .models import (
 
 from . import validation
 from .base import DefaultView
+from .exceptions import HTTPNotFoundError
 from .validation import validator
 
 import logging
@@ -32,6 +33,23 @@ def http_500_uncaught_internal_error(exc, request):
         "status": "error"
     }
     return body
+
+@view_config(context=HTTPNotFoundError, renderer='json')
+def http_404_not_found(exc, request):
+    """ The resource which the request party is seeking
+    is not found. Developers are free to use 404
+    instead of 403 to indicate resource not found
+    so no accidental information leakage (e.g. an
+    authenticated user tried to see someone else's
+    exercise but receives 404 knows nothing about
+    the existence of the tried exercise). """
+
+    request.response.status_code = 404
+    return {
+        "status": "fail",
+        "error": {"type": "not_found"},
+        "message": exc.msg
+    }
 
 def get_counts(poll_id):
     params = {"poll_id": poll_id}
@@ -77,20 +95,40 @@ class PollViews(DefaultView):
             data={"id": poll._id}
         )
 
-@view_config(route_name="vote", renderer="json", request_method="POST")
-def vote(request):
-    poll_id = request.matchdict["id"]
-    LOG.info("Poll id requested: " + str(poll_id))
+class VoteViews(DefaultView):
+    def __init__(self, request):
+        self.request = request
 
-    poll = DBSession.query(Poll).filter_by(_id=poll_id).first()
-    LOG.info("Poll exist: " + str(poll is not None))
-    if poll:
-        index = int(request.json_body["option"])
-        ip_address = request.json_body["ip"]
+    def get_poll_or_404(self, session, poll_id):
+        LOG.debug("Searching for poll id: " + poll_id)
+        poll = DBSession.query(Poll).filter_by(_id=poll_id).first()
+        LOG.debug("Poll exist: " + str(poll is not None))
+        if not poll:
+            raise HTTPNotFoundError()
+        return poll
+
+    def cast_vote(self, session, poll, option, ip_address):
         resp = Response(ip_address=ip_address)
-        resp.choice = poll.choices[index]
-        DBSession.add(resp)
-        return {"status": "Ok"}
+        resp.choice = poll.choices[option]
+        session.add(resp)
+
+    @view_config(route_name="vote", renderer="json", request_method=POST)
+    @validator(validation.check_vote)
+    def vote(self):
+        poll_id = self.request.matchdict["id"]
+        LOG.info("Poll id requested: " + str(poll_id))
+
+        poll = self.get_poll_or_404(DBSession, poll_id)
+
+        option = self.request.cleaned_data["option"]
+        ip_address = self.request.cleaned_data["ip"]
+        try:
+            self.cast_vote(DBSession, poll, option, ip_address)
+            return self.success(201, override=True,
+                data={"status": u"Ok"})
+        except IndexError:
+            return self.fail(409, error="invalid-option",
+                message="The option index is out of range.")
 
 @view_config(route_name="results", renderer="json", request_method="GET")
 def get_result(request):

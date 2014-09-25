@@ -29,7 +29,7 @@ class TestViews(BaseTestCase):
         choice_index = 0
         r2 = self.create_vote(poll_id, choice_index,
             self.ip_address)
-        self.assertEqual(r2.status_code, 200)
+        self.assertEqual(r2.status_code, 201)
         self.assertEqual(r2.json()["status"], u"Ok")
 
     def test_get_result_with_zeros(self):
@@ -50,9 +50,9 @@ class TestViews(BaseTestCase):
             self.options_str)
         poll_id = r1.json()["id"]
         r2 = self.create_vote(poll_id, 0, self.ip_address)
-        self.assertEqual(r2.status_code, 200)
+        self.assertEqual(r2.status_code, 201)
         r3 = self.create_vote(poll_id, 1, self.ip_address)
-        self.assertEqual(r3.status_code, 200)
+        self.assertEqual(r3.status_code, 201)
 
         voted_indices = (0,1)
         r4 = self.get_result(poll_id)
@@ -74,9 +74,9 @@ class TestViews(BaseTestCase):
             self.options_str)
         poll_id = r1.json()["id"]
         r2 = self.create_vote(poll_id, 1, self.ip_address)
-        self.assertEqual(r2.status_code, 200)
+        self.assertEqual(r2.status_code, 201)
         r3 = self.create_vote(poll_id, 1, self.ip_address)
-        self.assertEqual(r3.status_code, 200)
+        self.assertEqual(r3.status_code, 201)
 
         r4 = self.get_result(poll_id)
         self.assertEqual(r4.status_code, 200)
