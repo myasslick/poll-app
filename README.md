@@ -12,11 +12,13 @@ python setup.py develop
 nosetests .
 ```
 
-Tests should now passed! Edit production.ini (or whichever
+Tests should now passed! Copy and edit production.ini (or whichever
 INI file you use) with the right database configuration. Then
 create the schema and launch the server:
 
 ```
+cp configurations/production.ini.example production.ini
+<edit INI file>
 initialize_pollapp_db production.ini
 gunicorn --paste production.ini -w 2 -t 3600
 ```

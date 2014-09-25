@@ -1,3 +1,7 @@
+# Ignore all production.ini, development.ini
+production.ini
+development.ini
+
 # Ignore db file
 *.db
 
