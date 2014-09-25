@@ -41,6 +41,8 @@ GROUP BY choice.id;
 def get_result(request):
     poll_id = request.matchdict["id"]
     poll = DBSession.query(Poll).filter_by(_id=poll_id).first()
+    #NOTE: Eh Personally I think returning a JSON list
+    # isn't the best practice.
     if poll:
         return get_counts(poll.id)
     else:
